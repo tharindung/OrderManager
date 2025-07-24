@@ -1,5 +1,6 @@
 package com.ccw.order_service.service;
 
+import com.ccw.order_service.dto.CustomOrderResponseDto;
 import com.ccw.order_service.dto.OrderDto;
 
 import java.util.List;
@@ -10,7 +11,8 @@ public interface OrderService {
 
     public List<OrderDto> getAllOrders();
 
-    public OrderDto getOrderById(Long orderId);
+    //public OrderDto getOrderById(Long orderId);
+    public CustomOrderResponseDto getOrderById(Long orderId);
 
     public OrderDto updateOrder(OrderDto orderDto, Long orderId);
 

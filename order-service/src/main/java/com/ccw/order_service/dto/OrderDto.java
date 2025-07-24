@@ -24,4 +24,5 @@ public class OrderDto {
     private Double orderPrice;
 
     //Need to associate to 'Customer' entity
+    private Long orderCustId;
 }

@@ -1,6 +1,7 @@
 package com.ccw.order_service.controller;
 
 
+import com.ccw.order_service.dto.CustomOrderResponseDto;
 import com.ccw.order_service.dto.OrderDto;
 import com.ccw.order_service.entity.Order;
 import com.ccw.order_service.service.OrderService;
@@ -35,11 +36,14 @@ public class OrderController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable("id") Long orderId)
+    //public ResponseEntity<OrderDto> getOrderById(@PathVariable("id") Long orderId)
+    public ResponseEntity<CustomOrderResponseDto> getOrderById(@PathVariable("id") Long orderId)
     {
-        OrderDto foundOrder = orderService.getOrderById(orderId);
+        //OrderDto foundOrder = orderService.getOrderById(orderId);
+        CustomOrderResponseDto customOrderResponseDto = orderService.getOrderById(orderId);
 
-        return new ResponseEntity<>(foundOrder, HttpStatus.OK);
+        //return new ResponseEntity<>(foundOrder, HttpStatus.OK);
+        return new ResponseEntity<>(customOrderResponseDto, HttpStatus.OK);
     }
 
     @PutMapping("{id}")

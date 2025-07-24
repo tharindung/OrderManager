@@ -1,14 +1,20 @@
 package com.ccw.order_service.service.impl;
 
+import com.ccw.order_service.dto.CustomOrderResponseDto;
+import com.ccw.order_service.dto.CustomerDto;
 import com.ccw.order_service.dto.OrderDto;
 import com.ccw.order_service.entity.Order;
 import com.ccw.order_service.entity.Status;
 import com.ccw.order_service.exception.ResourceNotFoundException;
 import com.ccw.order_service.repository.OrderRepository;
+import com.ccw.order_service.service.APIClient;
 import com.ccw.order_service.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.lang.module.ResolutionException;
 import java.util.List;
@@ -21,6 +27,12 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     private ModelMapper modelMapper;
+
+    //private RestTemplate restTemplate;
+
+    //private WebClient webClient;
+
+    private APIClient apiClient;
 
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
@@ -39,11 +51,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto getOrderById(Long orderId) {
+    //public OrderDto getOrderById(Long orderId) {
+    public CustomOrderResponseDto getOrderById(Long orderId) {
 
         Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
 
-        return modelMapper.map(foundOrder, OrderDto.class);
+        /* Rest API call to 'Customer-Service' Microservice - using RestTemplate */
+
+        /*ResponseEntity<CustomerDto> responseEntity = restTemplate.getForEntity("http://localhost:8081/customer-service/apis/customers/" +
+                foundOrder.getOrderCustId(), CustomerDto.class);
+
+        CustomerDto customerDto = responseEntity.getBody();*/
+
+        /* Rest API call to 'Customer-Service' Microservice - using WebClient */
+
+        /*CustomerDto customerDto = webClient.get().uri("http://localhost:8081/customer-service/apis/customers/" +
+                foundOrder.getOrderCustId())
+                .retrieve()
+                .bodyToMono(CustomerDto.class)
+                .block();
+         */
+
+        /* REST API call to 'Customer-Service' Microservice - using FeignClient */
+
+        CustomerDto customerDto = apiClient.getCustomerById(foundOrder.getOrderCustId());
+
+        CustomOrderResponseDto customeOrderResponseDto = new CustomOrderResponseDto();
+
+        customeOrderResponseDto.setOrder(modelMapper.map(foundOrder, OrderDto.class));
+        customeOrderResponseDto.setCustomer(customerDto);
+
+        //return modelMapper.map(foundOrder, OrderDto.class);
+        return customeOrderResponseDto;
     }
 
     @Override

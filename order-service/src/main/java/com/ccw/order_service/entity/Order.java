@@ -37,5 +37,7 @@ public class Order {
     private Double orderPrice;
 
     //Need to associate to 'Customer' entity
+    @Column(name = "order_cust_id")
+    private Long orderCustId;
 
 }
