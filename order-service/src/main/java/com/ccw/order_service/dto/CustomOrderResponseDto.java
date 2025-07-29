@@ -14,4 +14,6 @@ public class CustomOrderResponseDto {
     private OrderDto order;
 
     private CustomerDto customer;
+
+    private StaffDto staff;
 }

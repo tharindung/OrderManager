@@ -40,4 +40,8 @@ public class Order {
     @Column(name = "order_cust_id")
     private Long orderCustId;
 
+    //Need to associate to 'Staff' entity
+    @Column(name = "order_staff_id")
+    private Long orderStaffId;
+
 }

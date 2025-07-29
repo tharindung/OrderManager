@@ -2,6 +2,7 @@ package com.ccw.order_service.controller;
 
 import com.ccw.order_service.dto.StatusDto;
 import com.ccw.order_service.service.StatusService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class StatusController {
     private StatusService statusService;
 
     @PostMapping
-    public ResponseEntity<StatusDto> createStatus(@RequestBody StatusDto statusDto)
+    public ResponseEntity<StatusDto> createStatus(@RequestBody @Valid StatusDto statusDto)
     {
         StatusDto savedStatus = statusService.createStatus(statusDto);
 
@@ -41,7 +42,7 @@ public class StatusController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<StatusDto> updateStatus(@RequestBody StatusDto statusDto, @PathVariable("id") Integer statusId)
+    public ResponseEntity<StatusDto> updateStatus(@RequestBody @Valid StatusDto statusDto, @PathVariable("id") Integer statusId)
     {
         StatusDto updatedStatus = statusService.updateStatus(statusDto, statusId);
 

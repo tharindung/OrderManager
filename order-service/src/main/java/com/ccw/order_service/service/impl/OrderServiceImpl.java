@@ -3,11 +3,13 @@ package com.ccw.order_service.service.impl;
 import com.ccw.order_service.dto.CustomOrderResponseDto;
 import com.ccw.order_service.dto.CustomerDto;
 import com.ccw.order_service.dto.OrderDto;
+import com.ccw.order_service.dto.StaffDto;
 import com.ccw.order_service.entity.Order;
 import com.ccw.order_service.entity.Status;
 import com.ccw.order_service.exception.ResourceNotFoundException;
 import com.ccw.order_service.repository.OrderRepository;
 import com.ccw.order_service.service.APIClient;
+import com.ccw.order_service.service.APIStaffClient;
 import com.ccw.order_service.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,6 +36,8 @@ public class OrderServiceImpl implements OrderService {
 
     private APIClient apiClient;
 
+    private APIStaffClient apiStaffClient;
+
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
 
@@ -54,7 +58,8 @@ public class OrderServiceImpl implements OrderService {
     //public OrderDto getOrderById(Long orderId) {
     public CustomOrderResponseDto getOrderById(Long orderId) {
 
-        Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
+        //Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
+        Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order", "orderId", orderId));
 
         /* Rest API call to 'Customer-Service' Microservice - using RestTemplate */
 
@@ -79,7 +84,14 @@ public class OrderServiceImpl implements OrderService {
         CustomOrderResponseDto customeOrderResponseDto = new CustomOrderResponseDto();
 
         customeOrderResponseDto.setOrder(modelMapper.map(foundOrder, OrderDto.class));
+
+        /* REST API call to 'Staff-Service' Microservice - using FeignClient */
+
+        StaffDto staffDto = apiStaffClient.getStaffById(foundOrder.getOrderStaffId());
+
         customeOrderResponseDto.setCustomer(customerDto);
+
+        customeOrderResponseDto.setStaff(staffDto);
 
         //return modelMapper.map(foundOrder, OrderDto.class);
         return customeOrderResponseDto;
@@ -88,7 +100,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto updateOrder(OrderDto orderDto, Long orderId) {
 
-        Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
+        //Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
+        Order foundOrder = orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order", "orderId", orderId));
 
         foundOrder.setOrderDate(orderDto.getOrderDate());
         foundOrder.setOrderDesc(orderDto.getOrderDesc());
@@ -103,7 +116,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(Long orderId) {
 
-        orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
+        //orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order with ID : " + orderId + " does not exist !"));
+        orderRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Order","orderId",orderId));
 
         orderRepository.deleteById(orderId);
     }

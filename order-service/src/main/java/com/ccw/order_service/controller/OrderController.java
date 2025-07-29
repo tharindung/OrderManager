@@ -5,6 +5,7 @@ import com.ccw.order_service.dto.CustomOrderResponseDto;
 import com.ccw.order_service.dto.OrderDto;
 import com.ccw.order_service.entity.Order;
 import com.ccw.order_service.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto)
+    public ResponseEntity<OrderDto> createOrder(@RequestBody @Valid OrderDto orderDto)
     {
         OrderDto savedOrder = orderService.createOrder(orderDto);
 
@@ -47,7 +48,7 @@ public class OrderController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<OrderDto> updateOrder(@RequestBody OrderDto orderDto, @PathVariable("id") Long orderId)
+    public ResponseEntity<OrderDto> updateOrder(@RequestBody @Valid OrderDto orderDto, @PathVariable("id") Long orderId)
     {
         OrderDto updatedOrder = orderService.updateOrder(orderDto, orderId);
 

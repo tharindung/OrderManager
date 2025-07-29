@@ -38,7 +38,8 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public StatusDto getStatusById(Integer statusId) {
 
-        Status foundStatus = statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status with ID  : "+statusId+" does not exist !"));
+        //Status foundStatus = statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status with ID  : "+statusId+" does not exist !"));
+        Status foundStatus = statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status", "statusId", statusId.longValue()));
 
         return modelMapper.map(foundStatus, StatusDto.class);
     }
@@ -46,7 +47,8 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public StatusDto updateStatus(StatusDto statusDto, Integer statusId) {
 
-        Status foundStatus  = statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status with ID  : "+statusId+" does not exist !"));
+        //Status foundStatus  = statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status with ID  : "+statusId+" does not exist !"));
+        Status foundStatus = statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status", "statusId", statusId.longValue()));
 
         foundStatus.setStatus(statusDto.getStatus());
 
@@ -58,7 +60,8 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void deleteStatus(Integer statusId) {
 
-        statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status with ID  : "+statusId+" does not exist !"));
+        //statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status with ID  : "+statusId+" does not exist !"));
+        statusRepository.findById(statusId).orElseThrow(()->new ResourceNotFoundException("Status", "statusId", statusId.longValue()));
 
         statusRepository.deleteById(statusId);
     }
